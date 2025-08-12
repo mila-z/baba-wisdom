@@ -1,4 +1,4 @@
-from . import db
+from api import db
 
 class WisdomCategories(db.Model):
     __tablename__ = 'wisdom_categories'

@@ -1,4 +1,4 @@
-from . import db
+from api import db
 
 class Review(db.Model):
     __tablename__ = 'reviews'
