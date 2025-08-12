@@ -7,12 +7,6 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     # role -> 'admin', 'baba', 'apprentice'
     role = db.Column(db.String(20), nullable=False)
-    type = db.Column(db.String(50)) # discerns whether the record in the db is baba or apprentice
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'user', 
-        'polymorphic_on':type
-    }
 
     def to_dict(self):
         return {
@@ -23,16 +17,15 @@ class User(db.Model):
         }
 
 
-class Baba(User):
+class Baba(db.Model):
+    id = db.Column(db.Integer, primary_key = True, nullable = False)
     village = db.Column(db.String(100), nullable=True)
     bio = db.Column(db.Text, nullable=True)
-    __mapper_args__ = {
-        'polymorphic_identity':'baba'
-    }
 
     # foreign keys
     # each baba has many wisdom
     wisdoms = db.relationship('Wisdom', back_populates='baba')
+    baba_id = db.relationship('User', back_populates='baba')
 
     def to_dict(self):
         data = super().to_dict()
@@ -42,13 +35,11 @@ class Baba(User):
 
 class Apprentice(User):
     birth_date = db.Column(db.Date, nullable=True)
-    __mapper_args__ = {
-        'polymorphic_identity':'apprentice'
-    }
-
+    
     # foreign keys
     # each apprentice has many reviews
     reviews = db.relationship('Review', back_populates='apprentice')
+    apprentice_id = db.relationship('User', back_populates = 'apprentice')
 
     def to_dict(self):
         data = super().to_dict()
