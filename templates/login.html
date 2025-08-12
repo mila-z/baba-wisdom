@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %}
+
+{% block content %} 
+<form method="POST">
+    <h3 align="center">Login</h3>
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            placeholder="Enter email"
+        />
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-group">
+            <input 
+                type="password" 
+                class="form-control" 
+                id="password" 
+                name="password" 
+                placeholder="Enter password"
+            />
+            <div class="input-group-append">
+                <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    onclick="togglePassword('password')"
+                >
+                    👁
+                </button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+{% endblock %}
+
+<!-- still doesnt show real password? -->
+<script>
+function togglePassword(id) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+        input.type = "text";
+    }
+    else {
+        input.type = "password";
+    }
+}
+</script>
