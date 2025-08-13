@@ -1,6 +1,7 @@
 from api import db
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(80), unique=True, nullable=False)
@@ -10,7 +11,8 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False)
 
     # relationship setup
-    baba = db.relationship('Baba', backpopulates='user')
+    baba = db.relationship('Baba', back_populates='user', uselist=False)
+    apprentice = db.relationship('Apprentice', back_populates='user', uselist=False)
 
     def to_dict(self):
         return {
@@ -23,6 +25,7 @@ class User(db.Model):
 
 
 class Baba(db.Model):
+    __tablename__ = 'babas'
     id = db.Column(db.Integer, primary_key = True, nullable = False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
     village = db.Column(db.String(100), nullable=True)
@@ -31,7 +34,7 @@ class Baba(db.Model):
     # relationship setup
     user = db.relationship('User', back_populates='baba')
     # each baba has many wisdom
-    wisdoms = db.relationship('Wisdom', back_populates='baba')
+    wisdom = db.relationship('Wisdom', back_populates='baba', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
@@ -42,6 +45,8 @@ class Baba(db.Model):
         }
 
 class Apprentice(db.Model):
+    __tablename__ = 'apprentices'
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     birth_date = db.Column(db.Date, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
 
