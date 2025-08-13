@@ -3,6 +3,7 @@ from flask import jsonify, request, redirect, url_for, flash, render_template
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
+from datetime import datetime
 from api import db
 from api.models import User, Baba, Apprentice
 
@@ -66,12 +67,50 @@ def sign_up():
             )
             db.session.add(new_user)
             db.session.commit()
+            login_user(new_user, remember=True) 
             flash('Account created!', category='success')
             if role =='baba':
                 return redirect(url_for('auth.setup_baba_profile'))
             else:
                 return redirect(url_for('auth.setup_apprentice_profile'))
     return render_template('sign_up.html', user=current_user)
+
+@bp.route('/sign-up/setup-baba', methods=['GET', 'POST'])
+@login_required
+def setup_baba_profile():
+    if request.method == 'POST':
+        village = request.form.get('village')
+        bio = request.form.get('bio')
+
+        if len(village) < 4:
+            flash('Village must be at least 4 characters.', category='error')
+        if len(bio) < 4:
+            flash('Bio must be at least 4 characters.', category='error')
+        else:
+            baba = Baba(user_id=current_user.id, village=village, bio=bio)
+            db.session.add(baba)
+            db.session.commit()
+            return redirect(url_for('main.home'))
+    return render_template('setup_baba.html', user=current_user)
+
+@bp.route('/sign-up/setup-apprentice', methods=['GET', 'POST'])
+@login_required
+def setup_baba_profile():
+    if request.method == 'POST':
+        birth_date_str = request.form.get('birth_date')
+        
+        try:
+            birth_date = datetime.strptime(birth_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            flash('Invalid date format. Please use YYYY-MM-DD.', category='error')
+            return redirect(url_for('auth.setup_apprentice_profile'))
+
+        apprentice = Apprentice(user_id=current_user.id, birth_date=birth_date)
+        db.session.add(apprentice)
+        db.session.commit()
+
+        return redirect(url_for('main.home'))
+    return render_template('setup_apprentice.html', user=current_user)
 
 @bp.route('/logout')
 @login_required
