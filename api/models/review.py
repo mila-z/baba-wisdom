@@ -7,7 +7,7 @@ class Review(db.Model):
     num_stars = db.Column(db.Integer, nullable = False)
     text = db.Column(db.Text)
 
-    # foreign keys
+    # realtionship setup
     # each review has one apprentice-author
     apprentice_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     apprentice = db.relationship('Apprentice', back_populates='reviews')

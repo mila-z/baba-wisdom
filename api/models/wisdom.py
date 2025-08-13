@@ -12,7 +12,7 @@ class Wisdom(db.Model):
     text = db.Column(db.Text, nullable = False)
     age_restriction = db.Column(db.Integer)
     
-    # foreign keys
+    # relationship setup
     # each wisdom has one baba-author
     baba_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     baba = db.relationship('Baba', back_populates='wisdoms')
