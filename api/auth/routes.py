@@ -27,12 +27,54 @@ def login():
                 flash('Incorrect password, try again.', category='error')
         else:
             flash('Email or username does not exist.', category='error')
-    return render_template('login.html')
+    return render_template('login.html', user=current_user)
 
-@bp.route('/sign-up')
-def register():
-    return '<h1>Testing the Register Page</h1>'
+@bp.route('/sign-up', methods=['GET', 'POST'])
+def sign_up():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        username = request.form.get('username')
+        role = request.form.get('role')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+
+        user = User.query.filter(
+            or_(
+                User.email == email,
+                User.username == username
+            )
+        ).first()
+        if user:
+            # maybe separate the messages for whether the problem is the email or the username
+            flash('Email or username already exists', category='error')
+        if len(email) < 4:
+            flash('Email must be at least 4 characters.', category='error')
+        elif len(username) < 4:
+            flash('Username must be at least 4 characters.', category='error')
+        elif role.lower() not in ['baba', 'apprentice']:
+            flash('Role must be either \'baba\' or \'apprentice\'.', category='error')
+        elif password1 != password2:
+            flash('Passwords don\'t match.', category='error')
+        elif len(password1) < 7:
+            flash('Password must be at least 7 characters.', category='error')
+        else:
+            new_user = User(
+                email=email, 
+                username=username,
+                role=role, 
+                password=generate_password_hash(password1, method='pbkdf2:sha256')
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Account created!', category='success')
+            if role =='baba':
+                return redirect(url_for('auth.setup_baba_profile'))
+            else:
+                return redirect(url_for('auth.setup_apprentice_profile'))
+    return render_template('sign_up.html', user=current_user)
 
 @bp.route('/logout')
+@login_required
 def logout():
-    return '<h1>Testing the Logout Page</h1>'
+    logout_user()
+    return redirect(url_for('auth.login'))
