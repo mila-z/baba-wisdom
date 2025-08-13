@@ -27,14 +27,11 @@ def create_app():
     # Initialize Flask extensions here
 
     # Register blueprints here
-    #from api.search import bp as main_bp
-    #app.register_blueprint(main_bp)
-
     from api.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
 
-    # from api.wisdom import bp as wisdom_bp
-    # app.register_blueprint(wisdom_bp)
+    from api.home import bp as home_bp
+    app.register_blueprint(home_bp)
 
     from .models import User, Baba, Apprentice, Review, Wisdom, Category, WisdomCategories
 
