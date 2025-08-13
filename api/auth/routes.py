@@ -95,7 +95,7 @@ def setup_baba_profile():
 
 @bp.route('/sign-up/setup-apprentice', methods=['GET', 'POST'])
 @login_required
-def setup_baba_profile():
+def setup_apprentice_profile():
     if request.method == 'POST':
         birth_date_str = request.form.get('birth_date')
         
