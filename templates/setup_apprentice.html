@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block title %}Set up apprentice profile{% endblock %}
+
+{% block content %} 
+<form method="POST">
+    <h3 align="center">Set Up Profile</h3>
+    <div class="form-group">
+        <label for="birth_date">Date of birth</label>
+        <input 
+            type="date" 
+            class="form-control" 
+            id="birth_date" 
+            name="birth_date" 
+            placeholder="Enter date of birth"
+        />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
