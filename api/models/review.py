@@ -9,10 +9,10 @@ class Review(db.Model):
 
     # realtionship setup
     # each review has one apprentice-author
-    apprentice_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    apprentice_id = db.Column(db.Integer, db.ForeignKey('apprentices.id'), nullable=False)
     apprentice = db.relationship('Apprentice', back_populates='reviews')
     # each review is under one wisdom
-    wisdom_id = db.Column(db.Integer, db.ForeignKey('wisdom.id'))
+    wisdom_id = db.Column(db.Integer, db.ForeignKey('wisdom.id'), nullable=False)
     wisdom = db.relationship('Wisdom', back_populates='reviews')
 
     def __init__(self, num_stars, text=None):
