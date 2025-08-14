@@ -4,6 +4,7 @@ from flask import jsonify, render_template, request, flash
 from flask_login import current_user, login_required
 import json
 from api import db
+from datetime import date
 
 @bp.route('/daily-wisdom')
 @login_required
@@ -13,7 +14,9 @@ def daily_wisdom():
 @bp.route('/wisdom-from-the-past-day')
 @login_required
 def wisdom_from_the_past_day():
-    return render_template('wisdom_past_day.html', user=current_user)
+    date_today = date.today()
+    wisdom = Wisdom.query.where(Wisdom.posted.date() == date_today).all()
+    return render_template('wisdom_past_day.html', user=current_user, wisdoms=wisdom)
 
 @bp.route('/post-wisdom', methods=['GET', 'POST'])
 @login_required
