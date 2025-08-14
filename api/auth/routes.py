@@ -35,7 +35,7 @@ def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
         username = request.form.get('username')
-        role = request.form.get('role')
+        role = request.form.get('role').lower()
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
@@ -52,7 +52,7 @@ def sign_up():
             flash('Email must be at least 4 characters.', category='error')
         elif len(username) < 4:
             flash('Username must be at least 4 characters.', category='error')
-        elif role.lower() not in ['baba', 'apprentice']:
+        elif role not in ['baba', 'apprentice']:
             flash('Role must be either \'baba\' or \'apprentice\'.', category='error')
         elif password1 != password2:
             flash('Passwords don\'t match.', category='error')
