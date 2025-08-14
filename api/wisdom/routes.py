@@ -5,11 +5,7 @@ from flask_login import current_user, login_required
 import json
 from api import db
 from datetime import date
-
-@bp.route('/daily-wisdom')
-@login_required
-def daily_wisdom():
-    return render_template('daily_wisdom.html', user=current_user)
+import random
 
 @bp.route('/wisdom-from-the-past-day')
 @login_required
@@ -17,6 +13,21 @@ def wisdom_from_the_past_day():
     date_today = date.today()
     wisdom = Wisdom.query.where(Wisdom.posted.date() == date_today).all()
     return render_template('wisdom_past_day.html', user=current_user, wisdoms=wisdom)
+
+def get_daily_wisdom():
+    all_wisdom = Wisdom.query.all()
+    today_str = date.today().isoformat()
+
+    random.seed(today_str)
+
+    if all_wisdom:
+        return random.choice(all_wisdom)
+    return None
+
+@bp.route('/daily-wisdom')
+@login_required
+def daily_wisdom():
+    return render_template('daily_wisdom.html', user=current_user, wisdom=get_daily_wisdom())
 
 @bp.route('/post-wisdom', methods=['GET', 'POST'])
 @login_required
