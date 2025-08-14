@@ -1,4 +1,5 @@
 from api import db
+from sqlalchemy.sql import func
 
 class WisdomCategories(db.Model):
     __tablename__ = 'wisdom_categories'
@@ -11,6 +12,7 @@ class Wisdom(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable = False)
     age_restriction = db.Column(db.Integer)
+    posted = db.Column(db.DateTime(timezone=True), default=func.now())
     
     # relationship setup
     # each wisdom has one baba-author
@@ -26,7 +28,7 @@ class Wisdom(db.Model):
             'id': self.id,
             'text': self.text,
             'age_restriction': self.age_restriction,
-            'categories': [cat.name for cat in self.categories]
+            'posted': self.posted
         }
     
 class Category(db.Model):
