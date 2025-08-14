@@ -33,6 +33,15 @@ def create_app():
     from api.home import bp as home_bp
     app.register_blueprint(home_bp)
 
+    from api.wisdom import bp as wisdom_bp
+    app.register_blueprint(wisdom_bp)
+
+    from api.search import bp as search_bp
+    app.register_blueprint(search_bp)
+
+    from api.review import bp as review_bp
+    app.register_blueprint(review_bp)
+
     from .models import User, Baba, Apprentice, Review, Wisdom, Category, WisdomCategories
 
     create_database(app)
