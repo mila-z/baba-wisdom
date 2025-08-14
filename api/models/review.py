@@ -15,12 +15,6 @@ class Review(db.Model):
     wisdom_id = db.Column(db.Integer, db.ForeignKey('wisdom.id'), nullable=False)
     wisdom = db.relationship('Wisdom', back_populates='reviews')
 
-    def __init__(self, num_stars, text=None):
-        if not(0 <= num_stars <= 5):
-            raise ValueError("Number of stars must be between 0 and 5.")
-        self.num_stars = num_stars
-        self.text = text
-
     def to_dict(self):
         return {
             'id': self.id,
