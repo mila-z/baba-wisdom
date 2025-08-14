@@ -1,5 +1,14 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block title %}Wisdom from the Past Day{% endblock %}
 
 {% block content %}
-<h1>Wisdom from the past day</h1>
+<h1 align="center">Wisdom from the Past Day</h1>
+<ul class="list-group list-group-flush" id="wisdom">
+    {% for wisdom in wisdoms %}
+    <li class="list-group-item">
+        <a href="{{ url_for('review.wisdom_reviews', wisdom_id=wisdom.id)}}">
+            {{ wisdom.text }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
 {% endblock %}
