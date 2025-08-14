@@ -1,5 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Wisdom reviews</h1>
+<h1 align="center">Reviews</h1>
+<ul class="list-group list-group-flush" id="reviews">
+    {% for review in reviews %}
+    <li class="list-group-item">{{ review.text }}, {{ '★' * review.num_stars }}{{ '☆' * (5 - review.num_stars) }}</li>
+    {% endfor %}
+</ul>
+<form method="POST">
+    <br/>
+    <label for="review_text">Review Text</label>
+    <textarea name="review_text" id="review_text" class="form-control" placeholder="Enter review text"></textarea>
+    <br/>
+    <label for="num_stars">Number of Stars</label>
+    <textarea  for="num_stars" id="num_stars" class="form-control" placeholder="Enter number of stars"></textarea>
+    <br/>
+    <div align="center">
+        <button type="submit" class="btn btn-priary">Add Review</button>
+    </div>
+</form>
 {% endblock %}
