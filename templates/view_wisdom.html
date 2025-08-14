@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block title %}View Wisdom{% endblock %}
+
+{% block content %}
+<h1 align="center">View a Wisdom</h1>
+<ul class="list-group list-group-flush" id="wisdom">
+    {% for wisdom in wisdoms %}
+    <li class="list-group-item">
+        <a href="{{ url_for('wisdom_reviews', wisdom_id=wisdom.id)}}">
+            {{ wisdom.text }}
+        </a>
+        <button type="button" class="close" onClick="deleteWisdom('{{ wisdom.id }}')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
