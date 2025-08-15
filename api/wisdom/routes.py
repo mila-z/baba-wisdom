@@ -72,7 +72,7 @@ def post_wisdom():
         
         wisdom_text = request.form.get('wisdom_text')
         categories = request.form.get('categories')
-        categories = [c.strip() for c in categories.split(',')]
+        categories = [c.strip().lower() for c in categories.split(',')]
         age_input = request.form.get('age_restriction')
         age_restriction = int(age_input) if age_input and age_input.isdigit() else 0 #maybe make an exception if its not digits
 
