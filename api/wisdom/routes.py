@@ -6,16 +6,34 @@ import json
 from api import db
 from datetime import date
 import random
+from sqlalchemy import func, extract
+
+def get_age(birth_date, today=None):
+    if today is None:
+        today = date.today()
+
+    age = today.year - birth_date.year
+    if (today.month, today.day) < (birth_date.month, birth_date.day):
+        age -= 1
+    return age
 
 @bp.route('/wisdom-from-the-past-day')
 @login_required
 def wisdom_from_the_past_day():
     date_today = date.today()
-    wisdom = Wisdom.query.where(Wisdom.posted.date() == date_today).all()
+    query = Wisdom.query.where(func.date(Wisdom.posted) == date_today)
+    
+    if current_user.role == 'apprentice':
+        age = get_age(current_user.apprentice.birth_date, date_today)
+        print(age)
+        query = query.where(Wisdom.age_restriction <= age)
+
+    wisdom = query.all()
+    
     return render_template('wisdom_past_day.html', user=current_user, wisdoms=wisdom)
 
 def get_daily_wisdom():
-    all_wisdom = Wisdom.query.all()
+    all_wisdom = Wisdom.query.where(Wisdom.age_restriction == 0).all()
     today_str = date.today().isoformat()
 
     random.seed(today_str)
