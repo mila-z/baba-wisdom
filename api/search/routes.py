@@ -20,11 +20,7 @@ def search():
         
         if categories:
             categories = [c.strip().lower() for c in categories.split(',')]
-            query = query.filter(
-                or_(
-                    Category.name.in_(categories),
-                    Category.id.is_(None))
-            )
+            query = query.filter(Category.name.in_(categories))
         
         if keywords:
             keywords = [k.strip() for k in keywords.split(',')]
