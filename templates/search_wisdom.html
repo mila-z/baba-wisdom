@@ -1,5 +1,26 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block title %}Search a Wisdom{% endblock %}
 
 {% block content %}
-<h1>Search Wisdom</h1>
+<h1 align="center">Search a Wisdom</h1>
+<form method="POST" class="mb-3">
+    <label for="categories">Categories</label>
+    <textarea name="categories" id="categories" class="form-control" placeholder="Enter categories"></textarea>
+    <label for="keywords">Keywords</label>
+    <textarea name="textarea" id="textarea" class="form-control" placeholder="Enter keywords"></textarea>
+    <br/>
+    <div align="center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+<form method="GET">
+    <ul class="list-group list-group-flush" id="wisdom">
+        {% for wisdom in wisdoms %}
+        <li class="list-group-item" id="wisdom-{{ wisdom.id }}">
+            <a href="{{ url_for('review.wisdom_reviews', wisdom_id=wisdom.id) }}">
+                {{ wisdom.text }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</form>
 {% endblock %}
