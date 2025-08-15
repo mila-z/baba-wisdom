@@ -32,7 +32,7 @@ def wisdom_reviews(wisdom_id):
             flash('Review added!', category='success')
             return redirect(url_for('review.wisdom_reviews', wisdom_id=wisdom_id))
     
-    reviews = Review.query.all()
+    reviews = Review.query.where(Review.wisdom_id == wisdom_id).all()
     return render_template('wisdom_reviews.html', user=current_user, reviews=reviews)
 
 # maybe add a delete review functionality
