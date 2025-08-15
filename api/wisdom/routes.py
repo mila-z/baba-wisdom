@@ -1,5 +1,5 @@
 from api.wisdom import bp
-from api.models import Wisdom
+from api.models import Wisdom, Category, WisdomCategories
 from flask import jsonify, render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_required
 import json
@@ -47,6 +47,21 @@ def get_daily_wisdom():
 def daily_wisdom():
     return render_template('daily_wisdom.html', user=current_user, wisdom=get_daily_wisdom())
 
+def add_categories(submitted):
+    current = {c.name: c for c in Category.query.all()}
+    category_objects = []
+
+    for c_name in submitted:
+        if c_name in current:
+            category_objects.append(current[c_name])
+        else:
+            category = Category(name=c_name)
+            db.session.add(category)
+            db.session.flush()
+            category_objects.append(category)
+
+    return category_objects
+
 @bp.route('/post-wisdom', methods=['GET', 'POST'])
 @login_required
 def post_wisdom():
@@ -56,6 +71,8 @@ def post_wisdom():
             return redirect(url_for('wisdom.post_wisdom'))
         
         wisdom_text = request.form.get('wisdom_text')
+        categories = request.form.get('categories')
+        categories = [c.strip() for c in categories.split(',')]
         age_input = request.form.get('age_restriction')
         age_restriction = int(age_input) if age_input and age_input.isdigit() else 0 #maybe make an exception if its not digits
 
@@ -69,6 +86,10 @@ def post_wisdom():
                 baba_id=current_user.id, 
                 age_restriction=age_restriction
             )
+
+            category_objects = add_categories(categories)
+            new_wisdom.categories.extend(category_objects) 
+
             db.session.add(new_wisdom)
             db.session.commit()
             flash('Wisdom added!', category='success')
