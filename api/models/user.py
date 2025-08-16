@@ -40,7 +40,7 @@ class Baba(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'village': self.vilagte,
+            'village': self.village,
             'bio': self.bio
         }
 
