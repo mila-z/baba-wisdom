@@ -23,7 +23,7 @@ def login():
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('main.home'))
+                return redirect(url_for('home.home'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -90,7 +90,7 @@ def setup_baba_profile():
             baba = Baba(user_id=current_user.id, village=village, bio=bio)
             db.session.add(baba)
             db.session.commit()
-            return redirect(url_for('main.home'))
+            return redirect(url_for('home.home'))
     return render_template('setup_baba.html', user=current_user)
 
 @bp.route('/sign-up/setup-apprentice', methods=['GET', 'POST'])
@@ -109,7 +109,7 @@ def setup_apprentice_profile():
         db.session.add(apprentice)
         db.session.commit()
 
-        return redirect(url_for('main.home'))
+        return redirect(url_for('home.home'))
     return render_template('setup_apprentice.html', user=current_user)
 
 @bp.route('/logout')
