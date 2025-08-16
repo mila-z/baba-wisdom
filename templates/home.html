@@ -2,7 +2,7 @@
 
 {% block content %}
     <span class="title"><h1>{% block title %} Welcome to baba wisdom {% endblock %}</h1></span>
-    <ul>
+    <ul style="list-style: none; padding-left: 0; margin: 0; font-weight: normal; font-style: normal;">
         <li><a id="daily" href="{{ url_for('wisdom.daily_wisdom') }}">Wisdom of the Day</a></li>
         <li><a id="from_the_past_day" href="{{ url_for('wisdom.wisdom_from_the_past_day') }}">Wisdom from the Past Day</a></li>
         <li><a id="search" href="{{ url_for('search.search') }}">Search Wisdom</a></li>
