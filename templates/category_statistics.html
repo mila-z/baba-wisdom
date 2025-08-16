@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block title %}Category Statistics{% endblock %}
+
+{% block content %}
+<h1 align="center">Category Statistics</h1>
+<div class="table table-striped table-bordered text-center">
+    <thead class="thead-dark">
+        <tr>
+            <th>Category name</th>
+            <th>Number of wisdom with that category</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cat_name, count in results %}
+        <br/>
+        <tr>
+            <td>{{ cat_name }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</div>
+{% endblock %}
