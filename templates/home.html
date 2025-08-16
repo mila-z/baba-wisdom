@@ -9,7 +9,14 @@
 
         {% if current_user.is_authenticated and current_user.role == 'baba' %}
             <li><a id="post" href="{{ url_for('wisdom.post_wisdom') }}">Post Wisdom</a></li>
+        {% endif %}
+        {% if current_user.is_authenticated and current_user.role != 'apprentice' %}
             <li><a id="post" href="{{ url_for('wisdom.view_wisdom') }}">View Wisdom</a></li>
+        {% endif %}
+        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+            <li><a id="post" href="{{ url_for('admin.village_statistics') }}">Village Statistics</a></li>
+            <li><a id="post" href="{{ url_for('admin.star_statistics') }}">Star Statistics</a></li>
+            <li><a id="post" href="{{ url_for('admin.category_statstics') }}">Category Statistics</a></li>
         {% endif %}
     </ul>
 {% endblock %}
