@@ -7,6 +7,14 @@
         <a href="{{ url_for('review.wisdom_reviews', wisdom_id=wisdom.id)}}">
             {{ wisdom.text }}
         </a>
+        {% if wisdom.categories %}
+            <hr class="my-2">
+            <div>
+                {% for category in wisdom.categories %}
+                    <span class="badge badge-primary">{{ category.name }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
     </li>
 </ul>
 {% endblock %}
