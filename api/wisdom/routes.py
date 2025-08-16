@@ -68,7 +68,7 @@ def post_wisdom():
     if request.method == 'POST':
         if current_user.role != 'baba':
             flash('Only a baba can post wisdom!', category='errror')
-            return redirect(url_for('wisdom.post_wisdom'))
+            return redirect(url_for('home.home'))
         
         wisdom_text = request.form.get('wisdom_text')
         categories = request.form.get('categories')
@@ -99,19 +99,20 @@ def post_wisdom():
 @bp.route('/view-wisdom', methods=['GET', 'POST'])
 @login_required
 def view_wisdom():
-    if current_user.role != 'baba':
+    if current_user.role == 'apprentice':
         flash('Only a baba can view the wisdom she has posted!', category='error')
-        return redirect(url_for('wisdom.post_wisdom'))
-
-    wisdom = Wisdom.query.filter_by(baba_id=current_user.baba.id).all()
+        return redirect(url_for('home.home'))
+    elif current_user.role == 'baba':
+        wisdom = Wisdom.query.filter_by(baba_id=current_user.baba.id).all()
+    else:
+        wisdom = Wisdom.query.all()
     return render_template('view_wisdom.html', user=current_user, wisdoms=wisdom)
 
 @bp.route('/delete-wisdom', methods=['DELETE'])
 @login_required
 def delete_wisdom():
-    if current_user.role != 'baba':
-        flash('Only a baba can delete a wisdom she has posted!', category='error')
-        return redirect(url_for('wisdom.delete_wisdom'))
+    if current_user.role == 'apprentice':
+        return jsonify({'error': 'Only a baba can delete wisdom'}), 403
 
     data = request.get_json()
     wisdom_id = data.get('wisdomId')
@@ -120,5 +121,6 @@ def delete_wisdom():
     if wisdom and wisdom.baba_id == current_user.baba.id:
         db.session.delete(wisdom)
         db.session.commit()
+        return jsonify({'success': True})
 
-    return jsonify({})
+    return jsonify({'error': 'Wisdom not found or not yours'}), 404
