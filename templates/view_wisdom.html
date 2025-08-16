@@ -25,5 +25,24 @@
     {% endfor %}
 </ul>
 
-<script src="{{ url_for('static', filename='wisdom.js') }}"></script>
+<script>
+    function deleteWisdom(wisdomId) {
+    console.log("hello, i am deleting now")
+
+    fetch('/delete-wisdom', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ wisdomId: wisdomId})
+    }).then((response) => {
+        if (response.ok) {
+            const element = document.getElementById(`wisdom-${wisdomId}`);
+            if (element) element.remove();
+        } else {
+            alert('Failed to delete wisdom.');
+        }
+    });
+}
+</script>
 {% endblock %}
