@@ -17,9 +17,9 @@ class Wisdom(db.Model):
     # relationship setup
     # each wisdom has one baba-author
     baba_id = db.Column(db.Integer, db.ForeignKey('babas.id'), nullable=False)
-    baba = db.relationship('Baba', back_populates='wisdom')
+    baba = db.relationship('Baba', back_populates='wisdom') 
     # each wisdom has many reviews
-    reviews = db.relationship('Review', back_populates='wisdom')
+    reviews = db.relationship('Review', back_populates='wisdom', cascade='all, delete-orphan')
     # each wisdom has many categories
     categories = db.relationship('Category', secondary=WisdomCategories.__table__, back_populates='wisdom')
 
