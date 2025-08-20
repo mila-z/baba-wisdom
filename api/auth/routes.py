@@ -117,3 +117,19 @@ def setup_apprentice_profile():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+@bp.route('/delete-account', methods=['GET'])
+@login_required
+def delete_account_page():
+    return render_template('delete_account.html', user=current_user)
+
+@bp.route('/delete-account', methods=['DELETE'])
+@login_required
+def delete_account():
+    user = current_user
+    
+    db.session.delete(user)
+    db.session.commit()
+    logout_user()
+
+    return jsonify({'message': 'Account deleted successfully'}), 200
