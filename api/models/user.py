@@ -11,8 +11,8 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(20), nullable=False)
 
     # relationship setup
-    baba = db.relationship('Baba', back_populates='user', uselist=False)
-    apprentice = db.relationship('Apprentice', back_populates='user', uselist=False)
+    baba = db.relationship('Baba', back_populates='user', uselist=False, cascade='all, delete-orphan')
+    apprentice = db.relationship('Apprentice', back_populates='user', uselist=False, cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
