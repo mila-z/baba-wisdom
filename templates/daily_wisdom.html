@@ -4,16 +4,20 @@
 <h1 align="center">Daily Wisdom</h1>
 <ul class="list-group list-group-flush" id="wisdom">
     <li class="list-group-item">
-        <a href="{{ url_for('review.wisdom_reviews', wisdom_id=wisdom.id)}}">
-            {{ wisdom.text }}
-        </a>
-        {% if wisdom.categories %}
-            <hr class="my-2">
-            <div>
-                {% for category in wisdom.categories %}
-                    <span class="badge badge-primary">{{ category.name }}</span>
-                {% endfor %}
-            </div>
+        {% if wisdom %}
+            <a href="{{ url_for('review.wisdom_reviews', wisdom_id=wisdom.id)}}">
+                {{ wisdom.text }}
+            </a>
+            {% if wisdom.categories %}
+                <hr class="my-2">
+                <div>
+                    {% for category in wisdom.categories %}
+                        <span class="badge badge-primary">{{ category.name }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% else %}
+            <p>No wisdom available today.</p>
         {% endif %}
     </li>
 </ul>
