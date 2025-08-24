@@ -1,6 +1,12 @@
-from api import create_app
+"""
+Main application entry point.
 
-app = create_app()
+This module initializes and runs the Flask application.
+"""
+from api import create_app
+from flask import Flask
+
+app: Flask = create_app()
 
 if __name__ == '__main__':
     app.run(debug=True)

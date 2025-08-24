@@ -1,14 +1,32 @@
-from api.auth import bp
+"""
+Authentication routes.
+
+This module provides user authentication and account management:
+- Login and logout
+- User registration (sign-up)
+- Role-specific profile setup (Baba and Apprentice)
+- Account deletion
+"""
+from datetime import datetime
+from typing import Tuple
 from flask import jsonify, request, redirect, url_for, flash, render_template
+from flask.typing import ResponseReturnValue
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
-from datetime import datetime
 from api import db
+from api.auth import bp
 from api.models import User, Baba, Apprentice
 
 @bp.route('/login', methods=['GET', 'POST'])
-def login():
+def login() -> ResponseReturnValue:
+    """
+    Handle user login.
+
+    Returns:
+        ResponseReturnValue: Login page template, or redirect to
+        the homepage if login is successful.
+    """
     if request.method == 'POST':
         user_data = request.form.get('email_or_username')
         password = request.form.get('password')
@@ -31,7 +49,14 @@ def login():
     return render_template('login.html', user=current_user)
 
 @bp.route('/sign-up', methods=['GET', 'POST'])
-def sign_up():
+def sign_up() -> ResponseReturnValue:
+    """
+    Handle user sign-up.
+
+    Returns:
+        ResponseReturnValue: Sign-up page template, or redirect to
+        the appropriate profile setup page after successful registration.
+    """
     if request.method == 'POST':
         email = request.form.get('email')
         username = request.form.get('username')
@@ -46,7 +71,6 @@ def sign_up():
             )
         ).first()
         if user:
-            # maybe separate the messages for whether the problem is the email or the username
             flash('Email or username already exists', category='error')
         if len(email) < 4:
             flash('Email must be at least 4 characters.', category='error')
@@ -60,9 +84,9 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         else:
             new_user = User(
-                email=email, 
+                email=email,
                 username=username,
-                role=role, 
+                role=role,
                 password=generate_password_hash(password1, method='pbkdf2:sha256')
             )
             db.session.add(new_user)
@@ -77,7 +101,14 @@ def sign_up():
 
 @bp.route('/sign-up/setup-baba', methods=['GET', 'POST'])
 @login_required
-def setup_baba_profile():
+def setup_baba_profile() -> ResponseReturnValue:
+    """
+    Handle set up for user with the role Baba.
+
+    Returns:
+        ResponseReturnValue: Setup page template, or redirect to
+        the home page after saving profile.
+    """
     if request.method == 'POST':
         village = request.form.get('village')
         bio = request.form.get('bio')
@@ -95,10 +126,16 @@ def setup_baba_profile():
 
 @bp.route('/sign-up/setup-apprentice', methods=['GET', 'POST'])
 @login_required
-def setup_apprentice_profile():
+def setup_apprentice_profile() -> ResponseReturnValue:
+    """
+    Handle set up for user with the role Apprentice.
+
+    Returns:
+        ResponseReturnValue: Setup page template, or redirect to
+        the home page after saving profile.
+    """
     if request.method == 'POST':
         birth_date_str = request.form.get('birth_date')
-        
         try:
             birth_date = datetime.strptime(birth_date_str, '%Y-%m-%d').date()
         except ValueError:
@@ -114,20 +151,38 @@ def setup_apprentice_profile():
 
 @bp.route('/logout')
 @login_required
-def logout():
+def logout() -> ResponseReturnValue:
+    """
+    Handle current user log out.
+
+    Returns:
+        ResponseReturnValue: Redirect to the login page.
+    """
     logout_user()
     return redirect(url_for('auth.login'))
 
 @bp.route('/delete-account', methods=['GET'])
 @login_required
-def delete_account_page():
+def delete_account_page() -> ResponseReturnValue:
+    """
+    Display the account deletion confirmation page.
+
+    Returns:
+        ResponseReturnValue: Delete account page template.
+    """
     return render_template('delete_account.html', user=current_user)
 
 @bp.route('/delete-account', methods=['DELETE'])
 @login_required
-def delete_account():
+def delete_account() -> Tuple[ResponseReturnValue, int]:
+    """
+    Handle current user account deletion.
+
+    Returns:
+        Tuple[responseReturnValue, int]: JSON confirmation message
+        and HTTP status code (200).
+    """
     user = current_user
-    
     db.session.delete(user)
     db.session.commit()
     logout_user()

@@ -17,7 +17,16 @@ git clone https://github.com/mila-z/baba-wisdom.git
 ```bash
 pip install -r requirements.txt
 ```
-3. Set environmental variables if needed
+3. Set the environmental variables:
+The app requires two enironment variables:
+- SECRET_KEY: a secret string for Flask session management
+- DB_NAME: the SQLite database filename (e.g., database.db)
+You can do so by creating a file named .env in the project root:
+```bash
+SECRET_KEY=your_secret_key_here
+DB_NAME=database.db
+```
+These will be loaded automatically when the app runs.
 4. Run the app:
 ```bash
 python main.py
